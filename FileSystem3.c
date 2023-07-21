@@ -1,45 +1,46 @@
 #include<stdio.h>
+#include<unistd.h>
 #include<fcntl.h>
-#include<string.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<sys/stat.h>
+#include<dirent.h>
 
-int main(int argc,char *argv[])
-{
-int fd=0;
-int Mode=0;
 
-if(argc!=3)
+int main(int argc, char *argv[])
 {
-printf("Invalid number of arguments\n");
-return -1;
-}
+	
+	DIR *dp = NULL;
+struct dirent *entry = NULL;
 
-if(strcmp(argv[2],"Read")==0)
+if(argc != 2)
 {
-Mode = O_RDONLY;
-}
-else if(strcmp(argv[2],"Write")==0)
-{
-Mode=O_WRONLY;
 
-}
-else
-{
-Mode=O_RDONLY;
-}
-
-fd=open(argv[1],Mode);
-if(fd == -1)
-{
-printf("Unable to open file\n");
+printf("Insufficient arguments\n");
 return -1;
 
 }
-else
+
+dp = opendir(argv[1]);
+if(dp = NULL)
 {
-printf("File is succuessfully opened with fd : %d\n",fd);
+printf("Unable to open directory\n");
+return -1;
+
 }
 
+printf("------------------------------------------------------------------\n");
 
+
+while((entry = readdir(dp)) != NULL)
+{
+printf("%20s : %d \n",entry->d_name,entry->d_ino);
+
+}
+
+closedir(dp);
+
+	
 return 0;
 
 }
