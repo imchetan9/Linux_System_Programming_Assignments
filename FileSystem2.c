@@ -1,50 +1,44 @@
 #include<stdio.h>
-#include<unistd.h>
 #include<fcntl.h>
 #include<string.h>
 
-#define BLOCKSIZE 1024
-
-int main(int argc, char *argv[])
+int main(int argc,char *argv[])
 {
+int fd=0;
+int Mode=0;
 
-int fdSource =0;
-int fdDest=0;
-int Ret =0;
-
-char Buffer[BLOCKSIZE] ={'\0'};
-
-if(argc != 3)
+if(argc!=3)
 {
-printf("Insufficient arguments\n");
+printf("Invalid number of arguments\n");
 return -1;
 }
 
-fdSource = open(argv[1],O_RDONLY);
-if(fdSource == -2)
+if(strcmp(argv[2],"Read")==0)
 {
-printf("Unable to open source file\return -1;n");
+Mode = O_RDONLY;
+}
+else if(strcmp(argv[2],"Write")==0)
+{
+Mode=O_WRONLY;
+
+}
+else
+{
+Mode=O_RDONLY;
+}
+
+fd=open(argv[1],Mode);
+if(fd == -1)
+{
+printf("Unable to open file\n");
 return -1;
-}
 
-fdDest = creat(argv[2],0777);
-if(fdDest == -1)
+}
+else
 {
-printf("Unable to create source file\return -1;n");
-close(fdSource);
-return -1;
-
+printf("File is succuessfully opened with fd : %d\n",fd);
 }
 
-
-while((Ret = read(fdSource,Buffer,sizeof(Buffer))) !=0)
-{
-write(fdDest,Buffer,Ret);
-memset(Buffer,0,sizeof(Buffer));
-}
-
-close(fdSource);
-close(fdDest);
 
 return 0;
 

@@ -1,53 +1,41 @@
 #include<stdio.h>
-#include<unistd.h>
 #include<fcntl.h>
-#include<stdlib.h>
 #include<unistd.h>
-#include<sys/stat.h>
-#include<dirent.h>
-
+#include<stdlib.h>
 
 int main(int argc, char *argv[])
 {
-	
-	DIR *dp = NULL;
-struct dirent *entry = NULL;
+int fd= 0;
+int Ret = 0;
+char *Buffer = NULL;
 
-if(argc != 2)
+if(argc != 3)
+{
+printf("Insufficient srguments\n");
+return-1;
+}
+
+fd = open(argv[1],O_RDONLY);
+if(fd == -1)
 {
 
-printf("Insufficient arguments\n");
+printf("Unable to open file\n");
 return -1;
-
 }
 
-dp = opendir(argv[1]);
-if(dp = NULL)
+Buffer = (char *)malloc(sizeof(atoi(argv[2])));
+
+Ret = read(fd,Buffer,atoi(argv[2]));
+if(Ret == 0)
 {
-printf("Unable to open directory\n");
+
+printf("Unable to read data from file\n ");
+
 return -1;
-
 }
-
-printf("------------------------------------------------------------------\n");
-
-
-while((entry = readdir(dp)) != NULL)
-{
-printf("%20s : %d \n",entry->d_name,entry->d_ino);
-
-}
-
-fstat(dp,&entry);
-
-printf("File name : %s\n",argv[1]);
-printf("File size is : %d\n",sobj.st_size);
+printf("Data from file is : %s\n",Buffer);
 
 
-
-closedir(dp);
-
-	
 return 0;
 
 }
